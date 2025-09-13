@@ -1,12 +1,13 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { prisma } from '../utils/prisma';
+import { Prisma } from '@prisma/client';
 
 const router = Router();
 
 const orderSchema = z.object({
   customerEmail: z.string().email(),
-  amount: z.number().positive(),
+  amount: z.union([z.number().positive(), z.string().regex(/^\d+(\.\d{1,2})?$/)]),
   status: z.string().min(1),
   orderDate: z.string().datetime(),
 });
@@ -21,7 +22,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
     const order = await prisma.order.create({
       data: {
         customerId: customer.id,
-        amount: body.amount,
+        amount: new Prisma.Decimal(body.amount as any),
         status: body.status,
         orderDate: new Date(body.orderDate),
       },
@@ -29,7 +30,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
     await prisma.customer.update({
       where: { id: customer.id },
       data: {
-        totalSpend: customer.totalSpend + body.amount,
+        totalSpend: new Prisma.Decimal(customer.totalSpend).plus(new Prisma.Decimal(body.amount as any)),
         totalVisits: customer.totalVisits + 1,
         lastVisit: new Date(body.orderDate),
       },
@@ -50,7 +51,7 @@ router.post('/batch', async (req: Request, res: Response, next: NextFunction) =>
       await prisma.order.create({
         data: {
           customerId: customer.id,
-          amount: item.amount,
+          amount: new Prisma.Decimal(item.amount as any),
           status: item.status,
           orderDate: new Date(item.orderDate),
         },
@@ -58,7 +59,7 @@ router.post('/batch', async (req: Request, res: Response, next: NextFunction) =>
       await prisma.customer.update({
         where: { id: customer.id },
         data: {
-          totalSpend: customer.totalSpend + item.amount,
+          totalSpend: new Prisma.Decimal(customer.totalSpend).plus(new Prisma.Decimal(item.amount as any)),
           totalVisits: customer.totalVisits + 1,
           lastVisit: new Date(item.orderDate),
         },
