@@ -1,0 +1,4 @@
+email,name,totalSpend,totalVisits,lastVisit
+sarikajolly@example.com,John Doe,150.75,3,2025-09-10T10:00:00Z
+jane.smith@example.com,Jane Smith,300.50,5,2025-09-12T14:30:00Z
+sam.jones@example.com,Sam Jones,50.00,1,2025-09-14T09:00:00Z

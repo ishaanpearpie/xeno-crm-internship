@@ -9,6 +9,7 @@ export default function Header() {
     <header className="flex items-center justify-between py-4">
       <nav className="flex items-center gap-4">
         <Link className="font-semibold" href="/">Home</Link>
+        <Link href="/ingestion">Data Upload</Link>
         <Link href="/campaigns">Campaigns</Link>
         <Link href="/segments">Segments</Link>
       </nav>
