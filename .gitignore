@@ -1,0 +1,23 @@
+# Root
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+
+# Env files
+.env
+.env.*
+apps/**/.env
+apps/**/.env.*
+
+# Build outputs
+.next/
+dist/
+coverage/
+.prisma/
+
+# IDE
+.vscode/
+.idea/
+
+

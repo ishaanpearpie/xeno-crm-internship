@@ -1,0 +1,7 @@
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=change_me_to_a_strong_secret
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+
+BACKEND_API_URL=http://localhost:4000
