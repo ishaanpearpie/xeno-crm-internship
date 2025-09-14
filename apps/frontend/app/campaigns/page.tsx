@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
+import { Badge } from "../../components/ui/badge";
 
 type CampaignItem = {
   id: string;
@@ -38,46 +41,134 @@ export default function CampaignsPage() {
     fetchData();
   }, [backend, session?.user?.email, session?.user?.name]);
 
+  const getStatusBadge = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return <Badge variant="success">Completed</Badge>;
+      case 'pending':
+        return <Badge variant="warning">Pending</Badge>;
+      case 'failed':
+        return <Badge variant="destructive">Failed</Badge>;
+      default:
+        return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
+
+  const getDeliveryRate = (delivered: number, sent: number) => {
+    if (sent === 0) return '0%';
+    return `${Math.round((delivered / sent) * 100)}%`;
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Campaign history</h1>
-      {loading ? (
-        <p className="text-gray-600">Loading...</p>
-      ) : items.length === 0 ? (
-        <p className="text-gray-600">No campaigns yet.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full border text-sm">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="text-left p-2 border">Name</th>
-                <th className="text-left p-2 border">Segment</th>
-                <th className="text-left p-2 border">Status</th>
-                <th className="text-left p-2 border">Audience</th>
-                <th className="text-left p-2 border">Sent</th>
-                <th className="text-left p-2 border">Delivered</th>
-                <th className="text-left p-2 border">Failed</th>
-                <th className="text-left p-2 border">Created</th>
-                <th className="text-left p-2 border">Completed</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((c) => (
-                <tr key={c.id} className="odd:bg-white even:bg-gray-50">
-                  <td className="p-2 border font-medium">{c.name}</td>
-                  <td className="p-2 border">{c.segmentName || '-'}</td>
-                  <td className="p-2 border capitalize">{c.status}</td>
-                  <td className="p-2 border">{c.audienceSize}</td>
-                  <td className="p-2 border">{c.sent}</td>
-                  <td className="p-2 border">{c.delivered}</td>
-                  <td className="p-2 border">{c.failed}</td>
-                  <td className="p-2 border">{new Date(c.createdAt).toLocaleString()}</td>
-                  <td className="p-2 border">{c.completedAt ? new Date(c.completedAt).toLocaleString() : '-'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <div className="container mx-auto py-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Campaigns</h1>
+          <p className="text-gray-600">
+            Track your marketing campaign performance and delivery metrics.
+          </p>
         </div>
+      </div>
+
+      {loading ? (
+        <Card>
+          <CardContent className="flex items-center justify-center h-32">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-gray-900 rounded-full animate-pulse"></div>
+              <p className="text-gray-600">Loading campaigns...</p>
+            </div>
+          </CardContent>
+        </Card>
+      ) : items.length === 0 ? (
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle>No campaigns yet</CardTitle>
+            <CardDescription>
+              Create your first campaign by setting up a segment and sending targeted messages to your customers.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>Campaign History</CardTitle>
+            <CardDescription>
+              {items.length} campaign{items.length !== 1 ? 's' : ''} • Most recent first
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Campaign</TableHead>
+                  <TableHead>Segment</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Audience</TableHead>
+                  <TableHead className="text-right">Sent</TableHead>
+                  <TableHead className="text-right">Delivered</TableHead>
+                  <TableHead className="text-right">Delivery Rate</TableHead>
+                  <TableHead>Created</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {items.map((campaign) => (
+                  <TableRow key={campaign.id}>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{campaign.name}</div>
+                        <div className="text-sm text-gray-600 truncate max-w-xs">
+                          {campaign.message}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">
+                        {campaign.segmentName || 'All Customers'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {getStatusBadge(campaign.status)}
+                    </TableCell>
+                    <TableCell className="text-right font-medium">
+                      {campaign.audienceSize.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {campaign.sent.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex flex-col items-end">
+                        <span>{campaign.delivered.toLocaleString()}</span>
+                        {campaign.failed > 0 && (
+                          <span className="text-xs text-red-500">
+                            {campaign.failed} failed
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Badge variant={campaign.delivered === campaign.sent ? "success" : "secondary"}>
+                        {getDeliveryRate(campaign.delivered, campaign.sent)}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-sm text-gray-600">
+                      {formatDate(campaign.createdAt)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
