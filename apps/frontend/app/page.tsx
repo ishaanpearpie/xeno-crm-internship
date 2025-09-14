@@ -10,7 +10,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold tracking-tight">
           Welcome to Xeno CRM
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Powerful customer segmentation and campaign management for modern marketers. 
           Create targeted campaigns, analyze customer behavior, and drive engagement.
         </p>

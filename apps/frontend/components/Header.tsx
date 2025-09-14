@@ -4,6 +4,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { ThemeToggle } from "./theme-toggle";
 
 export default function Header() {
   const { data: session, status } = useSession();
@@ -12,43 +13,43 @@ export default function Header() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <nav className="flex items-center space-x-6">
           <Link 
-            className="text-lg font-bold text-gray-900 hover:text-gray-700 transition-colors" 
+            className="text-lg font-bold text-primary hover:text-primary/80 transition-colors" 
             href="/"
           >
             Xeno CRM
           </Link>
           <div className="hidden md:flex items-center space-x-6">
             <Link 
-              className={`text-sm font-medium transition-colors hover:text-gray-900 ${
-                isActive('/') ? 'text-gray-900' : 'text-gray-600'
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/') ? 'text-primary' : 'text-muted-foreground'
               }`}
               href="/"
             >
               Dashboard
             </Link>
             <Link 
-              className={`text-sm font-medium transition-colors hover:text-gray-900 ${
-                isActive('/ingestion') ? 'text-gray-900' : 'text-gray-600'
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/ingestion') ? 'text-primary' : 'text-muted-foreground'
               }`}
               href="/ingestion"
             >
               Data Upload
             </Link>
             <Link 
-              className={`text-sm font-medium transition-colors hover:text-gray-900 ${
-                isActive('/campaigns') ? 'text-gray-900' : 'text-gray-600'
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/campaigns') ? 'text-primary' : 'text-muted-foreground'
               }`}
               href="/campaigns"
             >
               Campaigns
             </Link>
             <Link 
-              className={`text-sm font-medium transition-colors hover:text-gray-900 ${
-                isActive('/segments') ? 'text-gray-900' : 'text-gray-600'
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/segments') ? 'text-primary' : 'text-muted-foreground'
               }`}
               href="/segments"
             >
@@ -58,19 +59,20 @@ export default function Header() {
         </nav>
         
         <div className="flex items-center space-x-3">
+          <ThemeToggle />
           {status === "loading" ? (
-            <div className="h-4 w-4 animate-pulse bg-gray-200 rounded"></div>
+            <div className="h-4 w-4 animate-pulse bg-muted rounded"></div>
           ) : session ? (
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">
-                <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
-                  <span className="text-xs font-medium text-gray-900">
+                <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                  <span className="text-xs font-medium text-foreground">
                     {session.user?.name?.charAt(0).toUpperCase()}
                   </span>
                 </div>
                 <div className="hidden sm:block">
                   <p className="text-sm font-medium">{session.user?.name}</p>
-                  <p className="text-xs text-gray-600">{session.user?.email}</p>
+                  <p className="text-xs text-muted-foreground">{session.user?.email}</p>
                 </div>
               </div>
               <Button 

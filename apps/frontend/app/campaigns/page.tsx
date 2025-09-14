@@ -74,7 +74,7 @@ export default function CampaignsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Campaigns</h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Track your marketing campaign performance and delivery metrics.
           </p>
         </div>
@@ -84,8 +84,8 @@ export default function CampaignsPage() {
         <Card>
           <CardContent className="flex items-center justify-center h-32">
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-gray-900 rounded-full animate-pulse"></div>
-              <p className="text-gray-600">Loading campaigns...</p>
+              <div className="w-4 h-4 bg-primary rounded-full animate-pulse"></div>
+              <p className="text-muted-foreground">Loading campaigns...</p>
             </div>
           </CardContent>
         </Card>
@@ -126,7 +126,7 @@ export default function CampaignsPage() {
                     <TableCell>
                       <div>
                         <div className="font-medium">{campaign.name}</div>
-                        <div className="text-sm text-gray-600 truncate max-w-xs">
+                        <div className="text-sm text-muted-foreground truncate max-w-xs">
                           {campaign.message}
                         </div>
                       </div>
@@ -149,7 +149,7 @@ export default function CampaignsPage() {
                       <div className="flex flex-col items-end">
                         <span>{campaign.delivered.toLocaleString()}</span>
                         {campaign.failed > 0 && (
-                          <span className="text-xs text-red-500">
+                          <span className="text-xs text-destructive">
                             {campaign.failed} failed
                           </span>
                         )}
@@ -160,7 +160,7 @@ export default function CampaignsPage() {
                         {getDeliveryRate(campaign.delivered, campaign.sent)}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-sm text-gray-600">
+                    <TableCell className="text-sm text-muted-foreground">
                       {formatDate(campaign.createdAt)}
                     </TableCell>
                   </TableRow>
