@@ -38,7 +38,11 @@ export default function IngestionPage() {
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:4000'}/api/customers/batch`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-user-email': session?.user?.email || '',
+        'x-user-name': session?.user?.name || '',
+      },
       body: JSON.stringify(customers),
     });
 
@@ -64,7 +68,11 @@ export default function IngestionPage() {
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:4000'}/api/orders/batch`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-user-email': session?.user?.email || '',
+        'x-user-name': session?.user?.name || '',
+      },
       body: JSON.stringify(orders),
     });
 

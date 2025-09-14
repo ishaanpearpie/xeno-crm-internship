@@ -41,11 +41,14 @@ export default function SegmentsPage() {
       name: name || "Untitled Campaign",
       message,
       rules: { operator, conditions },
-      createdById: "00000000-0000-0000-0000-000000000000", // replace with real user id when available
     };
     const res = await fetch(`${backend}/api/campaigns`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-user-email": session.user?.email || "",
+        "x-user-name": session.user?.name || "",
+      },
       body: JSON.stringify(body),
     });
     if (res.ok) {

@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { prisma } from '../utils/prisma';
 import { buildCustomerWhereFromRules, SegmentRules } from '../services/rules';
+import { extractUserFromRequest, getOrCreateUserByEmail } from '../services/users';
 
 const router = Router();
 
@@ -29,14 +30,17 @@ router.post('/preview', async (req: Request, res: Response, next: NextFunction) 
 
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const schema = z.object({ name: z.string().min(1), description: z.string().optional(), rules: rulesSchema, createdById: z.string() });
+    const schema = z.object({ name: z.string().min(1), description: z.string().optional(), rules: rulesSchema });
     const body = schema.parse(req.body);
+    const { email, name } = extractUserFromRequest(req);
+    if (!email) return res.status(401).json({ message: 'User email required' });
+    const user = await getOrCreateUserByEmail(email, name);
     const segment = await prisma.segment.create({
       data: {
         name: body.name,
         description: body.description,
         rules: body.rules as any,
-        createdById: body.createdById,
+        createdById: user.id,
       },
     });
     res.status(201).json(segment);

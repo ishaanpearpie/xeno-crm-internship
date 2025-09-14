@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { prisma } from '../utils/prisma';
 import { buildCustomerWhereFromRules } from '../services/rules';
+import { extractUserFromRequest, getOrCreateUserByEmail } from '../services/users';
 
 const router = Router();
 
@@ -11,10 +12,28 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
       orderBy: { createdAt: 'desc' },
       include: {
         segment: true,
-        _count: { select: { communicationLogs: true } },
+        communicationLogs: true,
       },
     });
-    res.json(campaigns);
+    const items = campaigns.map(c => {
+      const sent = c.communicationLogs.filter(l => l.status === 'sent' || l.status === 'delivered').length;
+      const delivered = c.communicationLogs.filter(l => l.status === 'delivered').length;
+      const failed = c.communicationLogs.filter(l => l.status === 'failed').length;
+      return {
+        id: c.id,
+        name: c.name,
+        message: c.message,
+        status: c.status,
+        createdAt: c.createdAt,
+        completedAt: c.completedAt,
+        segmentName: c.segment?.name,
+        audienceSize: c.communicationLogs.length,
+        sent,
+        delivered,
+        failed,
+      };
+    });
+    res.json(items);
   } catch (err) {
     next(err);
   }
@@ -28,9 +47,11 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
       segmentId: z.string().uuid().optional(),
       // Alternatively, create segment ad-hoc with rules
       rules: z.any().optional(),
-      createdById: z.string(),
     });
     const body = schema.parse(req.body);
+    const { email, name } = extractUserFromRequest(req);
+    if (!email) return res.status(401).json({ message: 'User email required' });
+    const user = await getOrCreateUserByEmail(email, name);
 
     let segmentId = body.segmentId;
     if (!segmentId && body.rules) {
@@ -38,7 +59,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
         data: {
           name: body.name + ' segment',
           rules: body.rules,
-          createdById: body.createdById,
+          createdById: user.id,
         },
       });
       segmentId = segment.id;
@@ -50,7 +71,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
       data: {
         name: body.name,
         message: body.message,
-        createdById: body.createdById,
+        createdById: user.id,
         segmentId,
         status: 'running',
       },
