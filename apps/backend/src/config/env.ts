@@ -7,6 +7,7 @@ const EnvSchema = z.object({
   REDIS_URL: z.string().url({ message: 'REDIS_URL must be a valid URL' }),
   JWT_SECRET: z.string().min(16, 'JWT_SECRET must be at least 16 characters'),
   CORS_ORIGIN: z.string().default('http://localhost:3000'),
+  OPENAI_API_KEY: z.string().optional(),
 });
 
 export const env = EnvSchema.parse({
@@ -16,6 +17,7 @@ export const env = EnvSchema.parse({
   REDIS_URL: process.env.REDIS_URL,
   JWT_SECRET: process.env.JWT_SECRET,
   CORS_ORIGIN: process.env.CORS_ORIGIN,
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
 });
 
 
