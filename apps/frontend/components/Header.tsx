@@ -67,6 +67,14 @@ export default function Header() {
             >
               Segments
             </Link>
+            <Link 
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive('/about') ? 'text-primary' : 'text-muted-foreground'
+              }`}
+              href="/about"
+            >
+              About Me
+            </Link>
           </div>
         </nav>
         

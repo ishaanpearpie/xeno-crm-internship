@@ -118,7 +118,7 @@ export default function IngestionPage() {
     return (
       <div className="space-y-4">
         <h1 className="text-2xl font-semibold">Data Upload</h1>
-        <p className="text-gray-600">Please sign in to upload data.</p>
+        <p className="text-muted-foreground">Please sign in to upload data.</p>
       </div>
     );
   }
@@ -126,20 +126,20 @@ export default function IngestionPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">Data Upload</h1>
-      <p className="text-gray-600">Upload CSV files to import customer and order data.</p>
+      <p className="text-muted-foreground">Upload CSV files to import customer and order data.</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Customer Upload */}
         <div className="border rounded-lg p-4">
           <h2 className="text-lg font-medium mb-3">Customer Data</h2>
-          <p className="text-sm text-gray-600 mb-3">
+          <p className="text-sm text-muted-foreground mb-3">
             Expected columns: email, name, phone (optional), totalSpend (optional), totalVisits (optional), lastVisit (optional)
           </p>
           <input
             type="file"
             accept=".csv"
             onChange={(e) => setCustomerFile(e.target.files?.[0] || null)}
-            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-secondary-foreground hover:file:bg-secondary/80"
           />
           {customerFile && (
             <p className="text-sm text-green-600 mt-2">✓ {customerFile.name} selected</p>
@@ -149,14 +149,14 @@ export default function IngestionPage() {
         {/* Order Upload */}
         <div className="border rounded-lg p-4">
           <h2 className="text-lg font-medium mb-3">Order Data</h2>
-          <p className="text-sm text-gray-600 mb-3">
+          <p className="text-sm text-muted-foreground mb-3">
             Expected columns: customerEmail, amount, status (optional), orderDate (optional)
           </p>
           <input
             type="file"
             accept=".csv"
             onChange={(e) => setOrderFile(e.target.files?.[0] || null)}
-            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-secondary-foreground hover:file:bg-secondary/80"
           />
           {orderFile && (
             <p className="text-sm text-green-600 mt-2">✓ {orderFile.name} selected</p>
@@ -169,7 +169,7 @@ export default function IngestionPage() {
         <button
           onClick={handleUpload}
           disabled={uploading || (!customerFile && !orderFile)}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed"
         >
           {uploading ? 'Uploading...' : 'Upload Data'}
         </button>
@@ -177,7 +177,7 @@ export default function IngestionPage() {
 
       {/* Results */}
       {results.length > 0 && (
-        <div className="border rounded-lg p-4 bg-gray-50">
+        <div className="border rounded-lg p-4 bg-muted/30">
           <h3 className="font-medium mb-2">Upload Results:</h3>
           <ul className="space-y-1">
             {results.map((result, index) => (
@@ -188,12 +188,12 @@ export default function IngestionPage() {
       )}
 
       {/* Sample Data Format */}
-      <div className="border rounded-lg p-4 bg-blue-50">
+      <div className="border rounded-lg p-4 bg-muted/30">
         <h3 className="font-medium mb-2">Sample CSV Formats:</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
           <div>
             <strong>customers.csv:</strong>
-            <pre className="mt-1 bg-white p-2 rounded border text-xs overflow-x-auto">
+            <pre className="mt-1 bg-background p-2 rounded border text-xs overflow-x-auto">
 {`email,name,phone,totalSpend,totalVisits,lastVisit
 john@example.com,John Doe,+1234567890,1500.50,5,2024-01-15T10:30:00Z
 jane@example.com,Jane Smith,,750.25,3,2024-02-10T14:20:00Z`}
@@ -201,7 +201,7 @@ jane@example.com,Jane Smith,,750.25,3,2024-02-10T14:20:00Z`}
           </div>
           <div>
             <strong>orders.csv:</strong>
-            <pre className="mt-1 bg-white p-2 rounded border text-xs overflow-x-auto">
+            <pre className="mt-1 bg-background p-2 rounded border text-xs overflow-x-auto">
 {`customerEmail,amount,status,orderDate
 john@example.com,299.99,completed,2024-01-15T10:30:00Z
 jane@example.com,149.50,completed,2024-02-10T14:20:00Z`}
