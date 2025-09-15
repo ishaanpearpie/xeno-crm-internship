@@ -3,14 +3,26 @@ import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
 import { ThemeToggle } from "./theme-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 export default function Header() {
   const { data: session, status } = useSession();
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
+  const userName = session?.user?.name || "User";
+  const userEmail = session?.user?.email || "";
+  const userInitial = userName?.charAt(0)?.toUpperCase() || "U";
+  const userImage = (session?.user as any)?.image as string | undefined;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -61,32 +73,42 @@ export default function Header() {
         <div className="flex items-center space-x-3">
           <ThemeToggle />
           {status === "loading" ? (
-            <div className="h-4 w-4 animate-pulse bg-muted rounded"></div>
+            <div className="h-6 w-6 animate-pulse rounded-full bg-muted" />
           ) : session ? (
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center space-x-2">
-                <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
-                  <span className="text-xs font-medium text-foreground">
-                    {session.user?.name?.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-                <div className="hidden sm:block">
-                  <p className="text-sm font-medium">{session.user?.name}</p>
-                  <p className="text-xs text-muted-foreground">{session.user?.email}</p>
-                </div>
-              </div>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => signOut({ callbackUrl: "/" })}
-              >
-                Sign out
-              </Button>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 rounded-md border border-transparent px-2 py-1 hover:bg-accent">
+                  <Avatar>
+                    <AvatarImage src={userImage} alt={userName} />
+                    <AvatarFallback>{userInitial}</AvatarFallback>
+                  </Avatar>
+                  <span className="hidden sm:inline text-sm font-medium">{userName}</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">{userName}</span>
+                    {!!userEmail && (
+                      <span className="text-xs text-muted-foreground">{userEmail}</span>
+                    )}
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/campaigns">My Campaigns</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/segments">My Segments</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
-            <Button onClick={() => signIn("google")}>
-              Sign in with Google
-            </Button>
+            <Button onClick={() => signIn("google")}>Sign in with Google</Button>
           )}
         </div>
       </div>
