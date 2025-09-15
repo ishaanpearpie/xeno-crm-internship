@@ -22,7 +22,7 @@ export default function Header() {
   const userName = session?.user?.name || "User";
   const userEmail = session?.user?.email || "";
   const userInitial = userName?.charAt(0)?.toUpperCase() || "U";
-  const userImage = (session?.user as any)?.image as string | undefined;
+  const userImage = typeof session?.user?.image === 'string' ? session.user.image : undefined;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

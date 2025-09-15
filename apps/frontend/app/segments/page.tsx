@@ -5,10 +5,19 @@ import { useSession } from "next-auth/react";
 type ConditionField = "totalSpend" | "totalVisits" | "inactiveDays";
 type Comparison = "gt" | "gte" | "lt" | "lte" | "eq";
 
+type Condition = { field: ConditionField; op: Comparison; value: number };
+
+type ApiRule = { field: string; op: string; value: number | string };
+
+type NlToRulesResponse = {
+  operator?: "AND" | "OR" | string;
+  conditions?: ApiRule[];
+};
+
 export default function SegmentsPage() {
   const { data: session } = useSession();
   const [operator, setOperator] = useState<"AND" | "OR">("AND");
-  const [conditions, setConditions] = useState<Array<{ field: ConditionField; op: Comparison; value: number }>>([
+  const [conditions, setConditions] = useState<Condition[]>([
     { field: "totalSpend", op: "gt", value: 1000 },
   ]);
   const [audience, setAudience] = useState<number | null>(null);
@@ -18,8 +27,8 @@ export default function SegmentsPage() {
   const [parsing, setParsing] = useState<boolean>(false);
   const backend = process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:4000";
 
-  const updateCondition = (idx: number, key: string, value: any) => {
-    setConditions(prev => prev.map((c, i) => (i === idx ? { ...c, [key]: value } : c)));
+  const updateCondition = (idx: number, key: keyof Condition, value: Condition[keyof Condition]) => {
+    setConditions(prev => prev.map((c, i) => (i === idx ? { ...c, [key]: value } as Condition : c)));
   };
 
   const addCondition = () => setConditions(prev => [...prev, { field: "totalVisits", op: "gte", value: 1 }]);
@@ -75,14 +84,21 @@ export default function SegmentsPage() {
         },
         body: JSON.stringify({ prompt: nlPrompt }),
       });
-      const data = await res.json();
+      const data: NlToRulesResponse = await res.json();
       if (data?.operator && Array.isArray(data?.conditions)) {
-        setOperator((data.operator === 'OR' ? 'OR' : 'AND'));
-        // Sanitize and coerce values
-        const sanitized = (data.conditions as any[])
-          .map((c) => ({ field: c.field, op: c.op, value: Number(c.value) }))
-          .filter((c) => (c.field === 'totalSpend' || c.field === 'totalVisits' || c.field === 'inactiveDays') && !Number.isNaN(c.value));
-        if (sanitized.length > 0) setConditions(sanitized as any);
+        setOperator(data.operator === 'OR' ? 'OR' : 'AND');
+        const sanitized: Condition[] = data.conditions
+          .map((c): Condition | null => {
+            const field = c.field as ConditionField;
+            const op = c.op as Comparison;
+            const valueNum = Number(c.value);
+            const isFieldValid = field === 'totalSpend' || field === 'totalVisits' || field === 'inactiveDays';
+            const isOpValid = op === 'gt' || op === 'gte' || op === 'lt' || op === 'lte' || op === 'eq';
+            if (!isFieldValid || !isOpValid || Number.isNaN(valueNum)) return null;
+            return { field, op, value: valueNum };
+          })
+          .filter((c): c is Condition => c !== null);
+        if (sanitized.length > 0) setConditions(sanitized);
       }
     } finally {
       setParsing(false);
@@ -108,19 +124,19 @@ export default function SegmentsPage() {
       <div className="space-y-3">
         <div className="flex items-center gap-3">
           <label className="text-sm">Combine with</label>
-          <select className="border rounded px-2 py-1" value={operator} onChange={e => setOperator(e.target.value as any)}>
+          <select className="border rounded px-2 py-1" value={operator} onChange={e => setOperator(e.target.value as "AND" | "OR")}>
             <option value="AND">AND</option>
             <option value="OR">OR</option>
           </select>
         </div>
         {conditions.map((cond, idx) => (
           <div key={idx} className="flex items-center gap-2">
-            <select className="border rounded px-2 py-1" value={cond.field} onChange={e => updateCondition(idx, "field", e.target.value)}>
+            <select className="border rounded px-2 py-1" value={cond.field} onChange={e => updateCondition(idx, "field", e.target.value as ConditionField)}>
               <option value="totalSpend">totalSpend</option>
               <option value="totalVisits">totalVisits</option>
               <option value="inactiveDays">inactiveDays</option>
             </select>
-            <select className="border rounded px-2 py-1" value={cond.op} onChange={e => updateCondition(idx, "op", e.target.value)}>
+            <select className="border rounded px-2 py-1" value={cond.op} onChange={e => updateCondition(idx, "op", e.target.value as Comparison)}>
               <option value="gt">gt</option>
               <option value="gte">gte</option>
               <option value="lt">lt</option>

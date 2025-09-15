@@ -2,6 +2,24 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 
+type CsvRow = Record<string, string>;
+
+type CustomerInput = {
+  email: string;
+  name: string;
+  phone?: string;
+  totalSpend?: number;
+  totalVisits?: number;
+  lastVisit?: string;
+};
+
+type OrderInput = {
+  customerEmail: string;
+  amount: number;
+  status: string;
+  orderDate: string;
+};
+
 export default function IngestionPage() {
   const { data: session } = useSession();
   const [customerFile, setCustomerFile] = useState<File | null>(null);
@@ -9,12 +27,12 @@ export default function IngestionPage() {
   const [uploading, setUploading] = useState(false);
   const [results, setResults] = useState<string[]>([]);
 
-  const parseCSV = (text: string): any[] => {
+  const parseCSV = (text: string): CsvRow[] => {
     const lines = text.trim().split('\n');
     const headers = lines[0].split(',').map(h => h.trim());
-    return lines.slice(1).map(line => {
+    return lines.slice(1).map((line): CsvRow => {
       const values = line.split(',').map(v => v.trim());
-      const obj: any = {};
+      const obj: CsvRow = {};
       headers.forEach((header, index) => {
         obj[header] = values[index] || '';
       });
@@ -27,13 +45,13 @@ export default function IngestionPage() {
     const data = parseCSV(text);
     
     // Transform to expected format
-    const customers = data.map(row => ({
-      email: row.email || row.Email,
-      name: row.name || row.Name,
-      phone: row.phone || row.Phone || undefined,
-      totalSpend: row.totalSpend || row.total_spend || row.TotalSpend ? parseFloat(row.totalSpend || row.total_spend || row.TotalSpend) : undefined,
-      totalVisits: row.totalVisits || row.total_visits || row.TotalVisits ? parseInt(row.totalVisits || row.total_visits || row.TotalVisits) : undefined,
-      lastVisit: row.lastVisit || row.last_visit || row.LastVisit || undefined,
+    const customers: CustomerInput[] = data.map(row => ({
+      email: (row.email || row.Email || "").toString(),
+      name: (row.name || row.Name || "").toString(),
+      phone: (row.phone || row.Phone) ? String(row.phone || row.Phone) : undefined,
+      totalSpend: row.totalSpend || row.total_spend || row.TotalSpend ? parseFloat(String(row.totalSpend || row.total_spend || row.TotalSpend)) : undefined,
+      totalVisits: row.totalVisits || row.total_visits || row.TotalVisits ? parseInt(String(row.totalVisits || row.total_visits || row.TotalVisits)) : undefined,
+      lastVisit: (row.lastVisit || row.last_visit || row.LastVisit) ? String(row.lastVisit || row.last_visit || row.LastVisit) : undefined,
     }));
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:4000'}/api/customers/batch`, {
@@ -59,11 +77,11 @@ export default function IngestionPage() {
     const data = parseCSV(text);
     
     // Transform to expected format
-    const orders = data.map(row => ({
-      customerEmail: row.customerEmail || row.customer_email || row.CustomerEmail,
-      amount: parseFloat(row.amount || row.Amount),
-      status: row.status || row.Status || 'completed',
-      orderDate: row.orderDate || row.order_date || row.OrderDate || new Date().toISOString(),
+    const orders: OrderInput[] = data.map(row => ({
+      customerEmail: (row.customerEmail || row.customer_email || row.CustomerEmail || "").toString(),
+      amount: parseFloat(String(row.amount || row.Amount)),
+      status: (row.status || row.Status || 'completed').toString(),
+      orderDate: (row.orderDate || row.order_date || row.OrderDate || new Date().toISOString()).toString(),
     }));
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:4000'}/api/orders/batch`, {

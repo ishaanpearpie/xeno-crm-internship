@@ -16,7 +16,7 @@ export default function AboutPage() {
       <section className="py-10 sm:py-14">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">Hi! I'm Ishaan Jain</h1>
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">Hi! I&apos;m Ishaan Jain</h1>
             <p className="mt-3 text-muted-foreground max-w-2xl">
               Final-year CS student building practical, scalable, and user-centric applications.
             </p>
@@ -44,12 +44,12 @@ export default function AboutPage() {
               </div>
               <div className="md:col-span-2 space-y-4">
                 <p className="text-sm leading-6 text-muted-foreground">
-                  Hi, I'm Ishaan Jain, the creator of this Mini CRM platform. I'm a final-year computer science student driven by a core curiosity: understanding how things work, and then figuring out how to make them work better.
+                  Hi, I&apos;m Ishaan Jain, the creator of this Mini CRM platform. I&apos;m a final-year computer science student driven by a core curiosity: understanding how things work, and then figuring out how to make them work better.
                   My journey in tech is mirrored by a life of constant movement. Growing up across India and Malaysia—from Kochi to Kuala Lumpur—taught me adaptability and the value of embracing new perspectives. These experiences have shaped my approach to software development, where I enjoy navigating new challenges and learning diverse technologies. Settling in Bangalore for the last eight years has finally given me a place to call home.
                 </p>
                 <p className="text-sm leading-6 text-muted-foreground">
-                  This drive isn't new. From competing in interschool tech events and CBSE meets during my school years to the discipline I find in swimming and running, I've always been passionate about persistence and focused problem-solving. Outside of coding, you can find me exploring the intricate worlds of Christopher Nolan films (especially Interstellar) or diving into the latest anime.
-                  I built this project to put theory into practice and tackle real-world challenges like the ones Xeno is solving. I'm excited about opportunities where I can contribute to building scalable, intelligent, and user-centric applications.
+                  This drive isn&apos;t new. From competing in interschool tech events and CBSE meets during my school years to the discipline I find in swimming and running, I&apos;ve always been passionate about persistence and focused problem-solving. Outside of coding, you can find me exploring the intricate worlds of Christopher Nolan films (especially Interstellar) or diving into the latest anime.
+                  I built this project to put theory into practice and tackle real-world challenges like the ones Xeno is solving. I&apos;m excited about opportunities where I can contribute to building scalable, intelligent, and user-centric applications.
                 </p>
               </div>
             </CardContent>

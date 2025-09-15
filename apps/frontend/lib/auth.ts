@@ -20,9 +20,12 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (token) {
-        session.user = session.user || {} as any;
-        session.user.email = token.email as string | undefined;
-        session.user.name = token.name as string | undefined;
+        session.user = {
+          ...session.user,
+          email: token.email as string | undefined,
+          name: token.name as string | undefined,
+          image: typeof (session.user as { image?: unknown } | undefined)?.image === 'string' ? (session.user as { image?: string }).image : undefined,
+        };
       }
       return session;
     },

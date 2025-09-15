@@ -75,7 +75,7 @@ export default function CampaignsPage() {
     <div className="container mx-auto py-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{userName.split(" ")[0]}'s Campaigns</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{userName.split(" ")[0]}&apos;s Campaigns</h1>
           <p className="text-muted-foreground">
             Track your marketing campaign performance and delivery metrics.
           </p>
