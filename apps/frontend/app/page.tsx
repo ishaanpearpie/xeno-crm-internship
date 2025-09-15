@@ -21,7 +21,7 @@ export default function Home() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card className="hover:shadow-md transition-shadow cursor-pointer">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg">📊 Data Upload</CardTitle>
+            <CardTitle className="text-lg">Data Upload</CardTitle>
             <CardDescription>
               Import customer and order data
             </CardDescription>
@@ -37,7 +37,7 @@ export default function Home() {
 
         <Card className="hover:shadow-md transition-shadow cursor-pointer">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg">🎯 Segments</CardTitle>
+            <CardTitle className="text-lg">Segments</CardTitle>
             <CardDescription>
               Create customer segments with AI
             </CardDescription>
@@ -53,7 +53,7 @@ export default function Home() {
 
         <Card className="hover:shadow-md transition-shadow cursor-pointer">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg">📧 Campaigns</CardTitle>
+            <CardTitle className="text-lg">Campaigns</CardTitle>
             <CardDescription>
               Launch targeted campaigns
             </CardDescription>
@@ -69,7 +69,7 @@ export default function Home() {
 
         <Card className="hover:shadow-md transition-shadow cursor-pointer">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg">🤖 AI Assistant</CardTitle>
+            <CardTitle className="text-lg">AI Assistant</CardTitle>
             <CardDescription>
               Natural language segmentation
             </CardDescription>
@@ -88,7 +88,7 @@ export default function Home() {
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>🚀 Getting Started</CardTitle>
+            <CardTitle>Getting Started</CardTitle>
             <CardDescription>
               Follow these steps to set up your first campaign
             </CardDescription>
@@ -117,7 +117,7 @@ export default function Home() {
 
         <Card>
           <CardHeader>
-            <CardTitle>✨ Key Features</CardTitle>
+            <CardTitle>Key Features</CardTitle>
             <CardDescription>
               Everything you need for effective customer engagement
             </CardDescription>
