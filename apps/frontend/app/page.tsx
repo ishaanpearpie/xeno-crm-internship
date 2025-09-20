@@ -9,7 +9,7 @@ export default function Home() {
       {/* Hero Section */}
       <div className="text-center space-y-4 py-8">
         <h1 className="text-4xl font-bold tracking-tight">
-          Welcome to Xeno CRM
+          Welcome to CustomerFlow CRM
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Powerful customer segmentation and campaign management for modern marketers. 

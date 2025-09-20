@@ -1,4 +1,14 @@
+# CustomerFlow CRM Frontend
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## About CustomerFlow CRM
+
+CustomerFlow CRM is a modern customer relationship management platform that enables businesses to:
+- Import and manage customer data
+- Create dynamic customer segments based on behavior and spending patterns
+- Run targeted marketing campaigns with AI-powered content suggestions
+- Track campaign performance and delivery metrics
 
 ## Getting Started
 

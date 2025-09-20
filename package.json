@@ -1,4 +1,7 @@
 {
+  "name": "customerflow-crm",
+  "version": "1.0.0",
+  "description": "Customer segmentation and campaign management platform",
   "dependencies": {
     "next-auth": "^4.24.11"
   }

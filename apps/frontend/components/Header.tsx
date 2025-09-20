@@ -32,7 +32,7 @@ export default function Header() {
             className="text-lg font-bold text-primary hover:text-primary/80 transition-colors" 
             href="/"
           >
-            Xeno CRM
+            CustomerFlow CRM
           </Link>
           <div className="hidden md:flex items-center space-x-6">
             <Link 

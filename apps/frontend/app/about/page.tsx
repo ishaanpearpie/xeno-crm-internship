@@ -49,7 +49,7 @@ export default function AboutPage() {
                 </p>
                 <p className="text-sm leading-6 text-muted-foreground">
                   This drive isn&apos;t new. From competing in interschool tech events and CBSE meets during my school years to the discipline I find in swimming and running, I&apos;ve always been passionate about persistence and focused problem-solving. Outside of coding, you can find me exploring the intricate worlds of Christopher Nolan films (especially Interstellar) or diving into the latest anime.
-                  I built this project to put theory into practice and tackle real-world challenges like the ones Xeno is solving. I&apos;m excited about opportunities where I can contribute to building scalable, intelligent, and user-centric applications.
+                  I built this project to put theory into practice and tackle real-world challenges in customer relationship management. I&apos;m excited about opportunities where I can contribute to building scalable, intelligent, and user-centric applications.
                 </p>
               </div>
             </CardContent>
@@ -69,8 +69,8 @@ export default function AboutPage() {
               {/* Web3Forms embed */}
               <form action="https://api.web3forms.com/submit" method="POST" className="grid gap-4 md:grid-cols-2">
                 <input type="hidden" name="access_key" value="abe74d01-11f5-4c44-adfa-7d23b8341043" />
-                <input type="hidden" name="subject" value="New message from Xeno Mini CRM" />
-                <input type="hidden" name="from_name" value="Xeno CRM Contact" />
+                <input type="hidden" name="subject" value="New message from CustomerFlow CRM" />
+                <input type="hidden" name="from_name" value="CustomerFlow CRM Contact" />
                 <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
                 <div className="md:col-span-1">
                   <label className="block text-sm font-medium mb-1">Name</label>

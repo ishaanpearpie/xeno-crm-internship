@@ -111,6 +111,32 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
+// Delete campaign
+router.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    
+    // Check if campaign exists
+    const campaign = await prisma.campaign.findUnique({
+      where: { id },
+      include: { communicationLogs: true }
+    });
+    
+    if (!campaign) {
+      return res.status(404).json({ message: 'Campaign not found' });
+    }
+    
+    // Delete campaign (cascade delete will handle communicationLogs and aiContents)
+    await prisma.campaign.delete({
+      where: { id }
+    });
+    
+    res.json({ message: 'Campaign deleted successfully' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
 
 

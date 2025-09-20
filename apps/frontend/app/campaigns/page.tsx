@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { Badge } from "../../components/ui/badge";
+import { Button } from "../../components/ui/button";
 
 type CampaignItem = {
   id: string;
@@ -69,6 +70,33 @@ export default function CampaignsPage() {
     });
   };
 
+  const deleteCampaign = async (campaignId: string) => {
+    if (!confirm('Are you sure you want to delete this campaign? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`${backend}/api/campaigns/${campaignId}`, {
+        method: 'DELETE',
+        headers: {
+          "x-user-email": session?.user?.email || "",
+          "x-user-name": session?.user?.name || "",
+        },
+      });
+
+      if (res.ok) {
+        // Remove the campaign from the local state
+        setItems(items.filter(item => item.id !== campaignId));
+      } else {
+        const error = await res.json();
+        alert(`Failed to delete campaign: ${error.message}`);
+      }
+    } catch (error) {
+      console.error('Error deleting campaign:', error);
+      alert('Failed to delete campaign. Please try again.');
+    }
+  };
+
   const userName = session?.user?.name || "Your";
 
   return (
@@ -120,6 +148,7 @@ export default function CampaignsPage() {
                   <TableHead className="text-right">Delivered</TableHead>
                   <TableHead className="text-right">Delivery Rate</TableHead>
                   <TableHead>Created</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -164,6 +193,15 @@ export default function CampaignsPage() {
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {formatDate(campaign.createdAt)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => deleteCampaign(campaign.id)}
+                      >
+                        Delete
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

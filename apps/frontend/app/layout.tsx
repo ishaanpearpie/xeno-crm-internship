@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Xeno Mini CRM",
+  title: "CustomerFlow CRM",
   description: "Customer segmentation and campaign management platform",
 };
 
